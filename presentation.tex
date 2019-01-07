@@ -1,0 +1,1232 @@
+\documentclass[10pt,t,xcolor=dvipsnames,aspectratio=169]{beamer}
+
+\usetheme{Custom}
+
+\usepackage{sansmathfonts}
+
+%\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{mathtools}
+
+\usepackage{tikz}
+\usetikzlibrary{decorations,decorations.markings}
+\usetikzlibrary{decorations.shapes}
+\usepackage{import} % inputs with relative path
+\let\pgfimageWithoutPath\pgfimage 
+\renewcommand{\pgfimage}[2][]{\pgfimageWithoutPath[#1]{gfx/#2}}
+
+
+\title[Fellow project]{Hybrid quantum-classical simulations in lattice gauge theories}
+\author{Giovanni Iannelli}
+%\supervisor{Prof. Massimo D'Elia}
+\institute{Humboldt University of Berlin}
+\date{15 January 2019}
+
+\newlength\leftsidebar
+\makeatletter
+\setlength\leftsidebar{\beamer@leftsidebar}
+\makeatother
+
+\begin{document}
+
+\hoffset=-0.5\leftsidebar
+\begin{frame}[plain,t]
+\titlepage
+\end{frame}
+\hoffset=0in % restore left margin
+
+%\section*{}
+%\begin{frame}[c]
+%  \frametitle{Sommario}
+%  \tableofcontents[hidesubsections]
+%\end{frame}
+
+%\section{Introduzione}
+
+\tikzset{->-/.style={decoration={markings,mark=at position .55 with {\arrow{to}}},postaction={decorate}}} 
+\tikzset{
+    partial ellipse/.style args={#1:#2:#3}{
+        insert path={+ (#1:#3) arc (#1:#2:#3)}
+    }
+}
+
+\begin{frame}
+    \frametitle{Quantum computer and quantum simulation}
+    \begin{itemize}
+        \item
+            The QC memory is made by connected qubits (basis: $\{|0>,|1>\}$)
+        \item
+            The QPU:
+            \begin{itemize}
+                \item Applies unitary transformations on the qubits
+                \item Measures the qubits values
+            \end{itemize}
+        \item
+            Quantum simulation:
+            \begin{itemize}
+                \item
+                    Mapping a physical system into a qbits system
+                \item
+                    Measuring observables with a quantum computer
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Looking for the ground state}
+    \begin{itemize}
+        \item
+            We are developing a hybrid variational method:
+            \begin{itemize}
+                \item Selects a qubit quantum state
+                \item Measures the energy with a quantum computer
+                \item Iterates on a new quantum state until the minimum energy is found
+            \end{itemize}
+        \item
+            Difficulties:
+            \begin{itemize}
+                \item Quantum measures are probabilistic
+                \item Quantum decoherence
+            \end{itemize}
+        \item
+            We need a robust and scalable algorithm
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Application to lattice gauge theories}
+    \begin{itemize}
+        \item
+            We will apply this method to the Schwinger model (QED in $1+1$ dimensions)
+        \item
+            In presence of a chemical potential or a $\theta$ term, the action is complex: sign problem in MC
+        \item
+            Quantum simulators don't suffer from the sign problem
+        \item
+            We plan to apply the same idea in higher dimensions
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{The sign problem}
+    \begin{itemize}
+        \item
+            The sign problem arises when integrating highly oscillatory functions
+        \item
+            It's one of the main problems in computational physics.
+            It affects MC simulations of:
+            \begin{itemize}
+                \item Many electrons systems at low temperatures
+                \item Nuclei and neutron stars
+                \item Quark matter and vacuum in QCD
+            \end{itemize}
+        \item
+            Quantum simulators don't suffer from it.
+            They don't need numerical integration of path integrals.
+            Measures are performed directly
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Quantum advantage}
+    \begin{itemize}
+        \item
+            Using a quantum computer to solve a problem that a classical computer cannot
+        \item
+            Not achieved yet. Google and NASA (among others) are working on it for years.
+        \item
+            Quantum physics problems are more likely to have greater advanteges from quantum computers
+        \item
+            System with fermion sign problem could show quantum advantage
+    \end{itemize}
+\end{frame}
+
+%\begin{frame}
+%    \frametitle{Path integral}
+%    \begin{columns}[T]
+%        \begin{column}{0.6\textwidth}
+%            \begin{itemize}
+%                \item
+%                    In QM e in QFT,
+%                    quantità fisiche misurabili possono essere calcolate una volta noti i valori di aspettazione $\left<\hat{\mathcal O}[\phi]\right>$.
+%                \item
+%                    La formulazione del path integral fornisce un metodo per calcolare $\left<\hat{\mathcal O}[\phi]\right>$:
+%                    è uguale al valor medio di $\mathcal O[\phi]$ 
+%                    su tutte le possibili configurazioni (cammini) $\phi$,
+%                    pesate secondo la funzione $e^{-S[\phi]}$.
+%                \item
+%                    $S[\phi]$ è l'azione Euclidea del sistema.
+%                %\item
+%                %    Soluzioni classiche corrispondono ai minimi di $S[\phi]$
+%            \end{itemize}
+%        \end{column}%
+%        \begin{column}{0.4\textwidth}
+%               \centering
+%               \begin{tikzpicture}
+%                   \clip (-1,-1) rectangle (2,4.5);
+%                   \draw [thick,->-] (0,0) .. controls (0,6) and (-2,-3) .. (1,4);
+%                   %\draw [->-] (0,0) to[bend left] (1,1) to[bend left] (2,0) to[bend left] (1,0) to (0,4);
+%                   %\draw [->-] (0,0) .. controls (-0.5,2) .. (-1,3) .. controls (-2,2) .. (-0.5,2);
+%                   \draw [thick,->-] (0,0) to (1,4);
+%                   \draw [thick,->-] (0,0) to[bend right] (1,4);
+%                   \node[anchor=north east] at (0,0) {$A$};
+%                   \node[anchor=south west] at (1,4) {$B$};
+%               \end{tikzpicture}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Topologie non banali}
+%    \begin{columns}[T]
+%        \begin{column}{0.6\textwidth}
+%            \begin{itemize}
+%                \item
+%                    Sorgono difficoltà se lo spazio dei cammini $\phi$ è topologicamente non banale.
+%                \item
+%                    In tal caso il dominio di integrazione è diviso in classi di omotopia, caratterizzate da una carica topologica.
+%                \item
+%                    Due configurazioni sono omotope se è possibile ottenere una dall'altra con una deformazione continua.
+%                %\item
+%                %    Per ogni classe di omotopia vi è un minimo locale di $S[\phi]$,
+%                %    e dunque una soluzione classica.
+%                \item
+%                    In generale, è necessario integrare su tutte le configurazioni in ogni classe di omotopia per ottenere risultati corretti.
+%            \end{itemize}
+%        \end{column}
+%        \begin{column}{0.4\textwidth}
+%            \centering
+%            \begin{tikzpicture}
+%                \draw[fill=RoyalBlue] (0,2.5) circle (0.75);
+%                \draw[->-,thick] (0,3.5) arc (90:-90:1);
+%                \draw[->-,thick] (0,1.5) arc (270:90:1);
+%
+%                \draw[fill=RoyalBlue] (0,0) circle (0.75);
+%                \draw[>-,thick] (0.85,0) arc (0:-180:0.9);
+%                \draw[>-,thick] (-0.95,0) arc (180:0:1);
+%                \draw[>-,thick] (1.05,0) arc (0:-180:1.1);
+%                \draw[>-,thick] (-1.15,0) arc (180:0:1);
+%            \end{tikzpicture}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Topologia in QCD}
+%    \begin{itemize}
+%        \item
+%            Le configurazioni dei campi di gauge in QCD sono topologicamente non banali,
+%            e sono identificate da una carica topologica $Q \in \mathbb Z$.
+%        %\item
+%        %    Le corrispondenti soluzioni classiche sono chiamate istantoni.
+%        \item
+%            Ci sono anche quantità fisiche direttamente legate alla carica topologica,
+%            come la massa del mesone $\eta'$ e la massa dell'assione,
+%            che è una particella ipotetica candidata ad essere parte della materia oscura.
+%        \item
+%            La massa dell'assione è proporzionale alla suscettività topologica:
+%            \[
+%                \chi = \frac{\left<Q^2\right>}{V}
+%            \]
+%        \item
+%            Una stima accurata e precisa della suscettività topologica in QCD su reticolo potrebbe essere molto utile per la scoperta sperimentale dell'assione.
+%    \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Integrazione con Monte Carlo}
+%    \begin{columns}[T]
+%        \centering
+%        \begin{column}{0.64\textwidth}
+%            \begin{itemize}
+%                \item
+%                    Il dominio di integrazione viene discretizzato e campionato con catene di Markov con distribuzione di equilibrio $\propto e^{-S}$.
+%                \item
+%                    Viene aggiornata una variabile alla volta.
+%                    Nel limite al continuo, aggiornamenti locali corrispondono a trasformazioni di omotopia.
+%                    $\Rightarrow$ non si può passare da una classe di omotopia a un'altra.
+%                \item
+%                    Nello spazio discretizzato un tunneling è ancora possibile,
+%                    ma la probabilità decresce esponenzialmente avvicinandosi al continuo (freezing topologico).
+%                \item
+%                    Vicino al limite continuo, non è possibile effettuare misure corrette.
+%            \end{itemize}
+%        \end{column}
+%        \begin{column}{0.34\textwidth}
+%            \begin{center}
+%            \begin{overprint}
+%            \begin{tikzpicture}
+%                \clip (-1,0) rectangle (2,5.4);
+%                %\draw[thick,->-] (0,0) to (0.5,1);
+%
+%                \onslide<1>{\draw[thick,->-] (0.5,1) to (-0.5,2);}
+%                \onslide<2->{\draw[thick,->-] (0.5,1) to (0.5,2);}
+%
+%                \onslide<1>{\draw[thick,->-] (-0.5,2) to (0,3);}
+%                \onslide<2-3>{\draw[thick,->-] (0.5,2) to (0,3);}
+%                \onslide<4>{\draw[thick,->-] (0.5,2) to (1,3);}
+%
+%                \onslide<-2>{\draw[thick,->-] (0,3) to (1,4);}
+%                \onslide<3>{\draw[thick,->-] (0,3) to (0.5,4);}
+%                \onslide<4>{\draw[thick,->-] (1,3) to (0.5,4);}
+%
+%                \onslide<-2>{\draw[thick,->-] (1,4) to (0.5,5);}
+%                \onslide<3->{\draw[thick,->-] (0.5,4) to (0.5,5);}
+%
+%
+%                %\draw[fill=RoyalBlue] (-0.1,-0.1) rectangle (0.1,0.1);
+%
+%                \node[anchor=north east] at (0.5,1) {$A$};
+%                \draw[fill=RoyalBlue] (0.4,0.9) rectangle (0.6,1.1);
+%
+%                \onslide<1>{\draw[fill=RoyalBlue] (-0.6,1.9) rectangle (-0.4,2.1);}
+%                \onslide<2->{\draw[fill=RoyalBlue] (0.4,1.9) rectangle (0.6,2.1);}
+%
+%                \onslide<-3>{\draw[fill=RoyalBlue] (-0.1,2.9) rectangle (0.1,3.1);}
+%                \onslide<4>{\draw[fill=RoyalBlue] (0.9,2.9) rectangle (1.1,3.1);}
+%
+%                \onslide<-2>{\draw[fill=RoyalBlue] (0.9,3.9) rectangle (1.1,4.1);}
+%                \onslide<3->{\draw[fill=RoyalBlue] (0.4,3.9) rectangle (0.6,4.1);}
+%
+%                \draw[fill=RoyalBlue] (0.4,4.9) rectangle (0.6,5.1);
+%                \node[anchor=south west] at (0.5,5) {$B$};
+%            \end{tikzpicture}
+%            \end{overprint}
+%            \end{center}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Critical slowing down e algoritmi a cluster}
+%    \begin{itemize}
+%        \item
+%            Un fenomeno simile si manifesta in sistemi termodinamici vicino alla temperatura critica.
+%        \item
+%            Il tempo di rilassamento diverge con legge di potenza alla temperatura critica
+%            (il freezing topologico è invece esponenziale).
+%        \item
+%            In alcuni sistemi (i.e. sistemi di spin)
+%            il problema è risolto con l'implementazione di algoritmi a cluster.
+%        \item
+%            Usando le simmetrie del sistema, è possibile aggiornare simultaneamente un numero grande di variabili (cluster)
+%            in accordo con la distribuzione di Boltzmann (oppure $e^{-S}$).
+%    \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmi a cluster per contrastare il freezing topologico? I}
+%    \begin{itemize}
+%        \item
+%            Non è ancora disponibile un algoritmo a cluster per la QCD.
+%            Vi sono soltanto diversi metodi che aiutano a contrastare il freezing.
+%        \item
+%            Molte proprietà della carica topologica possono comunque essere studiate in modelli più semplici (modelli giocattolo).
+%        \item
+%            Particella quantistica sul cerchio: il problema si risolve \emph{tagliando} e \emph{ricucendo} i cammini con diversi avvolgimenti.
+%    \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmi a cluster per contrastare il freezing topologico? II}
+%    \begin{itemize}
+%        \item
+%            Lo scopo di questa tesi è stato di estendere questa idea a una teoria di gauge:
+%            la teoria $U(1)$ di pura gauge in due dimensioni.
+%        \item
+%            In questo modo si possono ottenere soluzioni esatte in un modello molto più simile alla QCD rispetto alla particella sul cerchio.
+%            In particolare:
+%            \begin{itemize}
+%                \item
+%                    È possibile implementare in questo modello le tecniche usate in QCD per valutarne l'efficacia.
+%                \item
+%                    È possibile studiare il comportamento della carica topologica in una teoria di gauge vicino al limite continuo.
+%            \end{itemize}
+%    \end{itemize}
+%\end{frame}
+%
+%
+%\section{Modello giocattolo}
+%
+%\begin{frame}
+%    \frametitle{Teoria nel continuo}
+%    \begin{itemize}
+%        \item
+%            La Lagrangiana Euclidea del sistema è:
+%            \[
+%                \mathcal L \equiv \frac{1}{4}F_{\mu\nu}F_{\mu\nu} \qquad \text{dove } F_{\mu\nu} \equiv \partial_\mu A_\nu - \partial_\nu A_\mu
+%            \]
+%            %con $F_{\mu\nu} \equiv \partial_\mu A_\nu - \partial_\nu A_\mu$
+%        \item
+%            La trasformazione di gauge locale dei campi indotta da $G(x)\equiv e^{i\theta(x)}\in U(1)$ è:
+%            \[
+%                A_\mu(x) = A_\mu(x) - \frac{1}{g}\theta(x)
+%            \]
+%        \item
+%            Il valore di aspettazione di un operatore $\widehat{\mathcal O}[A]$ è:
+%            \[
+%                \left<\widehat{\mathcal O}[A]\right> = \frac{\int[\mathrm dA]\, \mathcal O[A] e^{-S[A]}}{\int[\mathrm dA]\,e^{-S[A]}}
+%            \]
+%            dove l'azione è:
+%            \[
+%                S[A] \equiv \int\mathrm d^2x\,\mathcal L[A(x)]
+%            \]
+%    \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Carica topologica nel continuo}
+%    \begin{itemize}
+%        \item
+%            La densità di carica topologica è:
+%            \[
+%                q(x) \equiv \frac{g}{4\pi}\epsilon_{\mu\nu}F_{\mu\nu}(x)
+%            \]
+%        \item
+%            La carica topologica è:
+%            \[
+%                Q \equiv \int\mathrm d^2x\,q(x)
+%            \]
+%        \item
+%            $Q$ assume solo valori interi se lo spazio è:
+%            \begin{itemize}
+%                \item
+%                    Infinito con azione finita $\Rightarrow$ con campi asintoticamente nulli.
+%                \item
+%                    Una varietà compatta orientabile.
+%            \end{itemize}
+%    \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Teoria su reticolo: siti e link}
+%    \begin{columns}[T]
+%        \centering
+%        \begin{column}{0.59\textwidth}
+%            \begin{itemize}
+%                \item
+%                    La teoria viene discretizzata su una griglia finita di $N\times N$ siti indicati con $s$.
+%                \item
+%                    Le condizioni al bordo sono periodiche.
+%                \item
+%                    L'unità di misura delle lunghezze è il passo reticolare $a$.
+%                \item
+%                    I campi di gauge sono incapsulati nelle linee di Schwinger sui link:
+%                    \[
+%                        U_\mu(s) \equiv e^{iga\left[A_\mu(s)+\mathcal O(a)\right]} = U^*_{-\mu}(s+\hat\mu)
+%                    \]
+%                dove $U_\mu(s) \in U(1)$ è il link di lunghezza $a$ che parte da $s$ ed è diretto in direzione $\mu$.
+%            \end{itemize}
+%        \end{column}
+%        \begin{column}{0.39\textwidth}
+%            \centering
+%			\begin{tikzpicture}[x=1cm,y=1cm]
+%				\draw[step=1, help lines, dashed, color=black!30] (0,0) grid (2.5,4.5);
+%				\draw[->,thick,black] (0,0) -- (2.5,0) node [right] {$x_1$};
+%				\draw[->,thick,black] (0,0) -- (0,4.5) node [above] {$x_2$};
+%
+%				\draw[->-,very thick,RoyalBlue] (1,1) -- node [black,yshift=0.4cm] {$U_1(1,1)$} (2,1);
+%				\draw[->-,very thick,RoyalBlue] (1,4) -- node [black,right] {$U_{-2}(1,4)$} (1,3);
+%			\end{tikzpicture}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Teoria su reticolo: trasformazioni di gauge locali}
+%    \centering
+%    \begin{tikzpicture}[x=1.5cm,y=1.5cm]
+%        \draw[step=1, help lines, dashed, color=black!30] (0,0) grid (2.5,2.5);
+%        \draw[->,thick,black] (0,0) -- (2.5,0) node [right] {$x_1$};
+%        \draw[->,thick,black] (0,0) -- (0,2.5) node [above] {$x_2$};
+%
+%        \draw[->-,very thick,RoyalBlue] (1,1) -- node [black,yshift=0.3cm] {$U_1(s)$} (2,1);
+%        \draw[->-,very thick,RoyalBlue] (1,1) -- node [black,left] {$U_2(s)$} (1,2);
+%        \draw[->-,very thick,RoyalBlue] (1,1) -- node [black,yshift=-0.3cm] {$U_{-1}(s)$} (0,1);
+%        \draw[->-,very thick,RoyalBlue] (1,1) -- node [black,right] {$U_{-2}(s)$} (1,0);
+%
+%        \draw[->,thick,black] (3,1) -- node [black,yshift=0.4cm] {$G\in U(1)$} (4,1);
+%
+%        \draw[step=1, help lines, dashed, color=black!30, xshift=0.75cm] (4,0) grid (6.5,2.5);
+%        \draw[->,thick,black] (4.5,0) -- (7,0) node [right] {$x_1$};
+%        \draw[->,thick,black] (4.5,0) -- (4.5,2.5) node [above] {$x_2$};
+%
+%        \draw[->-,very thick,RoyalBlue] (5.5,1) -- node [black,yshift=0.3cm] {$GU_1(s)$} (6.5,1);
+%        \draw[->-,very thick,RoyalBlue] (5.5,1) -- node [black,left] {$GU_2(s)$} (5.5,2);
+%        \draw[->-,very thick,RoyalBlue] (5.5,1) -- node [black,yshift=-0.3cm] {$GU_{-1}(s)$} (4.5,1);
+%        \draw[->-,very thick,RoyalBlue] (5.5,1) -- node [black,right] {$GU_{-2}(s)$} (5.5,0);
+%    \end{tikzpicture}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Teoria su reticolo: oggetti gauge invarianti e plaquette}
+%    \begin{columns}[T]
+%        \centering
+%        \begin{column}{0.59\textwidth}
+%            \begin{itemize}
+%                \item 
+%                    Ogni linea di Schwinger valutata su un percorso chiuso è un invariante di gauge.
+%                \item
+%                    La plaquette è la linea di Schwinger attorno a un quadrato di lato $a$.
+%                    È data dal prodotto dei suoi link.
+%                \item
+%                    Nella plaquette è contenuta l'informazione del tensore dei campi di gauge $F_{\mu\nu}$:
+%                    \[
+%                        \mathcal P_{\mu\nu}(s) = e^{iga^2\left[F_{\mu\nu}(s)+\mathcal O(a)\right]}
+%                    \]
+%            \end{itemize}
+%		\end{column}
+%		\begin{column}{0.39\textwidth}
+%			\begin{tikzpicture}[x=0.8cm,y=0.8cm]
+%				\draw[step=1, help lines, dashed, color=black!30] (0,0) grid (3.5,4.5);
+%				\draw[->,thick,black] (0,0) -- (3.5,0) node [right] {$x_1$};
+%				\draw[->,thick,black] (0,0) -- (0,4.5) node [above] {$x_2$};
+%
+%				\draw[->-,very thick,RoyalBlue] (2,2) -- node [black,yshift=-0.3cm] {\scriptsize $U_1(s)$} (3,2);
+%				\draw[->-,very thick,RoyalBlue] (3,2) -- node [black,right] {\scriptsize $U_{2}(s+\hat1)$} (3,3);
+%				\draw[->-,very thick,RoyalBlue] (3,3) -- node [black,yshift=0.3cm] {\scriptsize $U_{-1}(s+\hat1+\hat2)$} (2,3);
+%				\draw[->-,very thick,RoyalBlue] (2,3) -- node [black,left] {\scriptsize $U_{-2}(s+\hat2)$} (2,2);
+%			\end{tikzpicture}
+%
+%		\end{column}
+%	\end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Azione su reticolo}
+%    \begin{itemize}
+%        \item
+%            L'azione su reticolo può essere definita in termini delle plaquette (gauge invarianti):
+%            \[
+%                S[U] \equiv \beta\sum_s\left(1-\Re\,\mathcal P_{12}(s)\right)
+%            \]
+%            Usando $a^2\sum_s \xrightarrow{a\to0} \int\mathrm d^2x$, converge all'azione continua:
+%            \[
+%                S = \beta\sum_s\frac{1}{4}g^2a^4F_{\mu\nu}(s)F_{\mu\nu}(s) + \mathcal O\left(a^5\right)
+%            \xrightarrow{a\to0} \beta g^2a^2\int\mathrm d^2x\,\frac{1}{4}F_{\mu\nu}(x)F_{\mu\nu}(x)
+%            \]
+%            se il parametro $\beta$ è posto uguale a:
+%            \[
+%                \beta \equiv \frac{1}{g^2a^2}
+%            \]
+%    \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Carica topologica su reticolo}
+%    \begin{itemize}
+%        \item
+%            Si può dare anche una definizione gauge invariante della carica topologica in termini delle plaquette:
+%            \[
+%                Q \equiv \frac{1}{2\pi}\sum_s\arg \mathcal P_{12}(s)
+%            \]
+%            che è la somma dei contributi locali:
+%            \[
+%                q(s) \equiv \frac{1}{2\pi}\arg \mathcal P_{12}(s)
+%            \]
+%        \item
+%            Invertendo il verso di percorrenza delle plaquette, la carica topologica cambia il segno.
+%        \item
+%            Con condizioni al bordo periodiche,
+%            questa definizione della carica topologica assume sempre valori interi.
+%            Come nella teoria continua.
+%    \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Misura dei valori di aspettazione con un Monte Carlo}
+%    \begin{itemize}
+%        \item
+%            Il valore di aspettazione di un operatore $\hat{\mathcal O}[U]$ definito su reticolo è:
+%            \[
+%                \left<\hat{\mathcal O}[U]\right> \equiv \frac{\int[\mathrm dU]\, \mathcal O[U] e^{-S[U]}}{\int[\mathrm dU]\,e^{-S[U]}}
+%            \]
+%            dove le variabili dinamiche sono i link.
+%        \item
+%            Una catena di Markov di configurazioni dei link viene generata in accordo con la distribuzione $\propto e^{-S[U]}$.
+%        \item
+%            La media di $\mathcal O[U]$ valutata sulla catena di Markov converge al valore di aspettazione $\left<\hat{\mathcal O}[U]\right>$
+%            (teorema ergodico).
+%    \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Estrapolazione del limite al continuo}
+%    \begin{itemize}
+%        \item
+%            Vengono effettuate diverse misure di $\left<\hat{\mathcal O}[U]\right>$ con valori di $a$ decrescente
+%            a volume fisico $L^2=N^2a^2$ costante.
+%        \item
+%            Con un fit dell'andamento ad $a$ decrescente si può stimare il valore limite in $a=0$.
+%        \item
+%            In questa teoria, l'accoppiamento $g$ non rinormalizza, e la linea di volume costante è data da:
+%            \[
+%                \frac{\beta}{N^2} = \text{costante}
+%            \]
+%        \item
+%            In seguito verranno riportate misure dell'energia di plaquette media $E[\mathcal P]$ e della suscettività topologica $\chi/g^2$
+%            sulla linea a volume costante $\beta/N^2=1/80$.
+%            \[
+%                E[\mathcal P] \equiv \frac{\beta}{N^2}\sum_s(1-\Re\,\mathcal P_{12}(s)) \qquad \chi/g^2 \equiv \beta\frac{Q^2}{N^2}
+%            \]
+%    \end{itemize}
+%\end{frame}
+%
+%
+%\section{Algoritmo locale}
+%
+%\begin{frame}
+%    \frametitle{Metropolis-Hastings locale I}
+%    \begin{columns}[T]
+%        \centering
+%        \begin{column}{0.59\textwidth}
+%            \begin{itemize}
+%                \item
+%                    Solo un link $U$ alla volta viene aggiornato con un M-H,
+%                    che è un algoritmo accept/reject che consente di campionare valori da una generica PDF.
+%                \item
+%                    La PDF dei link U dipende dall'azione:
+%                    \[
+%                        p(U) \propto e^{-S} \qquad S = \beta\sum_s(1-\Re\,\mathcal P_{12})
+%                    \]
+%                \item
+%                    Solo i valori delle plaquette $\mathcal P_1$ e $\mathcal P_2$ cambiano aggiornando $U$.
+%                \item
+%                    La PDF di $U$ dipende solo dai link contenuti nelle staples $\mathcal S_1$ e $\mathcal S_2$.
+%                    Tutti gli altri possono essere marginalizzati fuori dalla PDF.
+%            \end{itemize}
+%        \end{column}
+%        \begin{column}{0.39\textwidth}
+%            \centering
+%            \begin{tikzpicture}[x=1.4cm,y=1.4cm]
+%                \draw[step=1, help lines, dashed, color=black!30] (0,0) grid (2.5,3.5);
+%                \draw[->,thick,black] (0,0) -- (2.5,0) node [right] {$x_1$};
+%                \draw[->,thick,black] (0,0) -- (0,3.5) node [above] {$x_2$};
+%
+%                \draw[->-,very thick,orange] (1,2) node [black,left] {$U$} --  (2,2);
+%
+%
+%                %top staple
+%                \draw[->-,very thick,RoyalBlue] (2,2) -- (2,3);
+%                \draw[->-,very thick,RoyalBlue] (2,3) -- node [black,above] {$\mathcal S_1$} (1,3);
+%                \draw[->-,very thick,RoyalBlue] (1,3) -- (1,2);
+%
+%                %bot staple
+%                \draw[->-,very thick,RoyalBlue] (2,2) -- (2,1);
+%                \draw[->-,very thick,RoyalBlue] (2,1) -- node [black,below] {$\mathcal S_2$} (1,1);
+%                \draw[->-,very thick,RoyalBlue] (1,1) -- (1,2);
+%
+%                %top plaq
+%                \draw[->-,thick,dashed,black] (1.2,2.2) -- (1.8,2.2);
+%                \draw[->-,thick,dashed,black] (1.8,2.2) -- (1.8,2.8);
+%                \draw[->-,thick,dashed,black] (1.8,2.8) -- (1.2,2.8);
+%                \draw[->-,thick,dashed,black] (1.2,2.8) -- (1.2,2.2);
+%                \node at (1.5,2.5) {$\mathcal P_1$};
+%
+%                %bot plaq
+%                \draw[->-,thick,dashed,black] (1.2,1.2) -- (1.8,1.2);
+%                \draw[->-,thick,dashed,black] (1.8,1.2) -- (1.8,1.8);
+%                \draw[->-,thick,dashed,black] (1.8,1.8) -- (1.2,1.8);
+%                \draw[->-,thick,dashed,black] (1.2,1.8) -- (1.2,1.2);
+%                \node at (1.5,1.5) {$\mathcal P_2$};
+%
+%                %\node[anchor={north east}] at (1,1) {$\mathcal P_1$};
+%                %\node[anchor={north east}] at (2,1) {$\mathcal P_2$};
+%
+%            \end{tikzpicture}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Metropolis-Hastings locale II}
+%    \begin{columns}[T]
+%        \centering
+%        \begin{column}{0.59\textwidth}
+%            \begin{itemize}
+%                \item
+%                    La PDF di $U$ risulta essere:
+%                    \[
+%                        p(U) \propto e^{k\cos x} \qquad
+%                        \text{con }\begin{dcases}
+%                            W \equiv \mathcal S_1 + \mathcal S_2 \\
+%                            k \equiv \beta\left|W\right| \\
+%                            x \equiv \arg(WU)
+%                        \end{dcases}
+%                    \]
+%                \item
+%                    La distribuzione risulta convergere a una Gaussiana nel limite al continuo $\beta\to0$ (Metodo di Laplace).
+%                \item
+%                    È stato sfruttato questo fatto per ottimizzare l'algoritmo in modo da ottenere accettanze vicine al 100\% per $\beta$ piccoli.
+%            \end{itemize}
+%        \end{column}
+%        \begin{column}{0.39\textwidth}
+%            \centering
+%            \begin{tikzpicture}[x=1.4cm,y=1.4cm]
+%                \draw[step=1, help lines, dashed, color=black!30] (0,0) grid (2.5,3.5);
+%                \draw[->,thick,black] (0,0) -- (2.5,0) node [right] {$x_1$};
+%                \draw[->,thick,black] (0,0) -- (0,3.5) node [above] {$x_2$};
+%
+%                \draw[->-,very thick,orange] (1,2) node [black,left] {$U$} --  (2,2);
+%
+%                %top staple
+%                \draw[->-,very thick,RoyalBlue] (2,2) -- (2,3);
+%                \draw[->-,very thick,RoyalBlue] (2,3) -- node [black,above] {$\mathcal S_1$} (1,3);
+%                \draw[->-,very thick,RoyalBlue] (1,3) -- (1,2);
+%
+%                %bot staple
+%                \draw[->-,very thick,RoyalBlue] (2,2) -- (2,1);
+%                \draw[->-,very thick,RoyalBlue] (2,1) -- node [black,below] {$\mathcal S_2$} (1,1);
+%                \draw[->-,very thick,RoyalBlue] (1,1) -- (1,2);
+%
+%                %top plaq
+%                \draw[->-,thick,dashed,black] (1.2,2.2) -- (1.8,2.2);
+%                \draw[->-,thick,dashed,black] (1.8,2.2) -- (1.8,2.8);
+%                \draw[->-,thick,dashed,black] (1.8,2.8) -- (1.2,2.8);
+%                \draw[->-,thick,dashed,black] (1.2,2.8) -- (1.2,2.2);
+%                \node at (1.5,2.5) {$\mathcal P_1$};
+%
+%                %bot plaq
+%                \draw[->-,thick,dashed,black] (1.2,1.2) -- (1.8,1.2);
+%                \draw[->-,thick,dashed,black] (1.8,1.2) -- (1.8,1.8);
+%                \draw[->-,thick,dashed,black] (1.8,1.8) -- (1.2,1.8);
+%                \draw[->-,thick,dashed,black] (1.2,1.8) -- (1.2,1.2);
+%                \node at (1.5,1.5) {$\mathcal P_2$};
+%
+%                %\node[anchor={north east}] at (1,1) {$\mathcal P_1$};
+%                %\node[anchor={north east}] at (2,1) {$\mathcal P_2$};
+%
+%            \end{tikzpicture}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%
+%\begin{frame}
+%    \frametitle{Accettanza dell'algoritmo locale: limite al continuo}
+%    \centering
+%    \import{gfx/}{local_acc.pgf}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmo locale: simulazioni e verifica della correttezza}
+%    \begin{itemize}
+%        \item
+%            Simulazioni per diversi parametri di $\beta$ e $N$ sulla linea $\beta/N^2=1/80$ sono state effettuate.
+%        \item
+%            Ogni aggiornamento di tutti i link in successione è considerato un'iterazione della catena di Markov.
+%        \item
+%            I valori medi sono stati stimati con i dati raccolti in $10^6$ iterazioni,
+%            scartando i primi $2\times10^5$ per far termalizzare il sistema.
+%        \item
+%            Per verificare la correttezza del programma,
+%            è stato confrontato il valore di $E[\mathcal P]$, ottenuto con $\beta=7.2$ e $N=24$, con quello riportato da D\"urr e Hoelbling nel 2005:
+%            \[
+%                \begin{aligned}
+%                    E[\mathcal P] &= 0.52040(39) \quad \text{(D\"urr-Hoelbling)} \\
+%                    E[\mathcal P] &= \input{tables/plaq_local.tex} \quad \text{(Algoritmo locale)}
+%                \end{aligned}
+%            \]
+%    \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmo locale: Limite al continuo dell'energia di plaquette media con BIAS}
+%    \centering
+%    \import{gfx/}{local_energy_cont.pgf}
+%\end{frame}
+%
+%
+%\begin{frame}
+%    \frametitle{Algoritmo locale: storia della carica topologica}
+%    \centering
+%    \import{gfx/}{local_charge_history.pgf}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmo locale: tempo di autocorrelazione della carica topologica}
+%    \centering
+%    \import{gfx/}{local_charge_corr.pgf}
+%\end{frame}
+%
+%\section{Visualizzazione della carica topologica}
+%
+%\begin{frame}
+%    \frametitle{Colormap della carica locale}
+%    \begin{columns}[T]
+%        \centering
+%        \begin{column}{0.39\textwidth}
+%            \begin{itemize}
+%                \item
+%                    La carica topologica locale può assumere valori in $(-1/2,1/2]$.
+%                \item
+%                    I singoli contributi possono essere rappresentati con una diverging colormap.
+%                \item
+%                    I valori positivi o negativi sono rappresentati con colori contrastanti a luminosità e saturazione variabile.
+%                    I valori vicini a zero sono rappresentati in bianco.
+%            \end{itemize}
+%        \end{column}
+%        \begin{column}{0.59\textwidth}
+%            \begin{overprint}
+%                \centerline{\import{gfx/}{raw_charge_cmap.pgf}}
+%            \end{overprint}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Blur Gaussiano della carica}
+%    \begin{columns}[T]
+%        \centering
+%        \begin{column}{0.39\textwidth}
+%            \begin{itemize}
+%                \item
+%                    Su reticolo, la carica locale esibisce fluttuazioni UV di lunghezza d'onda $\sim a$.
+%                \item
+%                    Le fluttuazioni UV oscurano le fluttuazioni della carica continua, di lunghezza $\sim \rho$.
+%                \item
+%                    Occorre eseguire uno smoothing locale su distanze $\gg a$ ma $\ll \rho$.
+%                \item
+%                    È proposto un metodo per lo smoothing della carica che utilizza il blur Gaussiano.
+%            \end{itemize}
+%        \end{column}
+%        \begin{column}{0.59\textwidth}
+%            \begin{overprint}
+%                \onslide<1>\centerline{\import{gfx/}{charge_blur1.pgf}}
+%                \onslide<2>\centerline{\import{gfx/}{charge_blur2.pgf}}
+%                \onslide<3>\centerline{\import{gfx/}{charge_blur3.pgf}}
+%                \onslide<4>\centerline{\import{gfx/}{charge_blur4.pgf}}
+%            \end{overprint}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmo locale: visualizzazione del freezing topologico}
+%    \begin{columns}[T]
+%        \centering
+%        \begin{column}{0.39\textwidth}
+%            \begin{itemize}
+%                \item
+%                    Sono stati scelti valori dei parametri per cui il topological freezing è totale.
+%                \item
+%                    Sono riportate le colormap della carica in quattro successive iterazioni dell'algoritmo locale.
+%                \item
+%                    I cluster si muovono e si deformano, ma il loro contributo rimane lo stesso, così come la carica totale.
+%            \end{itemize}
+%        \end{column}
+%        \begin{column}{0.59\textwidth}
+%            \begin{overprint}
+%                \onslide<1>\centerline{\import{gfx/}{freezing1.pgf}}
+%                \onslide<2>\centerline{\import{gfx/}{freezing2.pgf}}
+%                \onslide<3>\centerline{\import{gfx/}{freezing3.pgf}}
+%                \onslide<4>\centerline{\import{gfx/}{freezing4.pgf}}
+%            \end{overprint}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmo locale: visualizzazione del tunneling topologico}
+%    \begin{columns}[T]
+%    \centering
+%        \begin{column}{0.39\textwidth}
+%            \begin{itemize}
+%                \item
+%                    Sono scelti ora parametri per cui il tunneling topologico è ancora possibile: avviene circa una volta ogni $500-1000$ iterazioni.
+%                %\item
+%                %    Un cluster blu scompare, e al suo posto compare un cluster rosso con contributo di segno opposto.
+%                \item
+%                    L'idea dell'algoritmo a cluster è di definire un algoritmo di Metropolis che possa ricreare artificialmente questo tunneling.
+%            \end{itemize}
+%        \end{column}
+%        \begin{column}{0.59\textwidth}
+%            \begin{overprint}
+%                \onslide<1>\centerline{\import{gfx/}{local_inv1.pgf}}
+%                \onslide<2>\centerline{\import{gfx/}{local_inv2.pgf}}
+%                \onslide<3>\centerline{\import{gfx/}{local_inv3.pgf}}
+%                \onslide<4>\centerline{\import{gfx/}{local_inv4.pgf}}
+%            \end{overprint}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%\section{Algoritmo a cluster}
+%
+%\begin{frame}
+%    \frametitle{Inversione della topologia di un cluster}
+%    \begin{columns}[T]
+%        \centering
+%        \begin{column}{0.59\textwidth}
+%            \begin{itemize}
+%                \item
+%                    L'obiettivo è di definire un'operazione che consenta il tunnel topologico.
+%                \item
+%                    Coniugando ogni link in una plaquette, la carica cambia segno (è come invertire il percorso).
+%                \item
+%                    L'azione locale invece rimane invariata $\Rightarrow$ utile per Metropolis.
+%                \item
+%                    Coniugando ogni link in una regione cambia però l'azione delle plaquette esterne connesse al bordo.
+%                \item
+%                    Sono in generale troppe a cambiare. La mossa avrebbe un'accettanza troppo bassa, specialmente vicino al limite continuo.
+%            \end{itemize}
+%        \end{column}
+%        \begin{column}{0.39\textwidth}
+%            \begin{center}
+%                \begin{overprint}
+%                \begin{tikzpicture}[x=0.35cm,y=0.35cm]
+%                    %internal links
+%                    %\draw[step=1,color=RoyalBlue] (1,1) grid (3,3);
+%
+%                    \onslide<1>{\draw[fill=MidnightBlue] (2,2) rectangle (5,5);}
+%                    \onslide<2>{\draw[fill=Maroon] (2,2) rectangle (5,5);}
+%                    %\draw[step=1,white] (2,2) grid (5,5);
+%
+%                    %external
+%                    \onslide<2>{\draw[fill=OliveGreen] (2,1) rectangle (5,2);}
+%                    \onslide<2>{\draw[fill=OliveGreen] (5,2) rectangle (6,5);}
+%                    \onslide<2>{\draw[fill=OliveGreen] (2,5) rectangle (5,6);}
+%                    \onslide<2>{\draw[fill=OliveGreen] (1,2) rectangle (2,5);}
+%
+%                    \draw[step=1, help lines, dashed, color=black!30] (0,0) grid (7.5,7.5);
+%                    \draw[->,thick,black] (0,0) -- (7.5,0) node [right] {$x_1$};
+%                    \draw[->,thick,black] (0,0) -- (0,7.5) node [above] {$x_2$};
+%
+%                    %path
+%                    \draw[very thick,black] (3,2) -- (4,2);
+%                    \draw[very thick,black] (4,2) -- (5,2);
+%                    \draw[very thick,black] (5,2) -- (5,3);
+%                    \draw[very thick,black] (5,3) -- (5,4);
+%                    \draw[very thick,black] (5,4) -- (5,5);
+%                    \draw[very thick,black] (5,5) -- (4,5);
+%                    \draw[very thick,black] (4,5) -- (3,5);
+%                    \draw[very thick,black] (3,5) -- (2,5);
+%                    \draw[very thick,black] (2,5) -- (2,4);
+%                    \draw[very thick,black] (2,4) -- (2,3);
+%                    \draw[very thick,black] (2,3) -- (2,2);
+%                    \draw[very thick,black] (2,2) -- (3,2);
+%
+%                    %crosses
+%                    %\onslide<2>{\draw (2,2) -- (3,1) -- (4,2) -- (5,1);}
+%                    %\onslide<2>{\draw (2,1) -- (3,2) -- (4,1) -- (5,2);}
+%
+%                    %\onslide<2>{\draw (5,2) -- (6,3) -- (5,4) -- (6,5);}
+%                    %\onslide<2>{\draw (6,2) -- (5,3) -- (6,4) -- (5,5);}
+%                    %
+%                    %\onslide<2>{\draw (2,6) -- (3,5) -- (4,6) -- (5,5);}
+%                    %\onslide<2>{\draw (2,5) -- (3,6) -- (4,5) -- (5,6);}
+%
+%                    %\onslide<2>{\draw (1,2) -- (2,3) -- (1,4) -- (2,5);}
+%                    %\onslide<2>{\draw (2,2) -- (1,3) -- (2,4) -- (1,5);}
+%
+%                \end{tikzpicture}
+%                \end{overprint}
+%            \end{center}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmo a cluster I}
+%    \begin{columns}[T]
+%    \centering
+%        \begin{column}{0.59\textwidth}
+%            \begin{itemize}
+%                \item
+%                    Se un link al bordo è reale, la plaquette esterna è invariata dopo l'inversione.
+%                \item
+%                    Eseguento una successione di trasformazioni di gauge locali, è possibile porre a 1 tutti i link del bordo tranne uno.
+%                    Per esempio, per il percorso in figura:
+%                    \begin{itemize}
+%                        \item
+%                            Si applica una trasformazione di gauge $G=U^*_{11}$ al sito di partenza di $U_{11}$, ponendolo a 1.
+%                        \item
+%                            Lo stesso procedimento si applica in successione su tutti i link $U_{10},U_{9},\ldots, U_1$.
+%                    \end{itemize}
+%            \end{itemize}
+%        \end{column}
+%        \begin{column}{0.39\textwidth}
+%                \begin{tikzpicture}[x=0.35cm,y=0.35cm]
+%                    %internal links
+%                    %\draw[step=1,color=RoyalBlue] (1,1) grid (3,3);
+%
+%                    \onslide<1>{\draw[fill=MidnightBlue] (2,2) rectangle (5,5);}
+%                    \onslide<2>{\draw[fill=Maroon] (2,2) rectangle (5,5);}
+%                    %\draw[step=1,white] (2,2) grid (5,5);
+%
+%                    %external
+%                    \onslide<2>{\draw[fill=OliveGreen] (2,1) rectangle (5,2);}
+%                    \onslide<2>{\draw[fill=OliveGreen] (5,2) rectangle (6,5);}
+%                    \onslide<2>{\draw[fill=OliveGreen] (2,5) rectangle (5,6);}
+%                    \onslide<2>{\draw[fill=OliveGreen] (1,2) rectangle (2,5);}
+%
+%                    \draw[step=1, help lines, dashed, color=black!30] (0,0) grid (7.5,7.5);
+%                    \draw[->,thick,black] (0,0) -- (7.5,0) node [right] {$x_1$};
+%                    \draw[->,thick,black] (0,0) -- (0,7.5) node [above] {$x_2$};
+%
+%                    %path
+%                    \draw[very thick,black] (3,2) -- (4,2);
+%                    \draw[very thick,black] (4,2) -- (5,2);
+%                    \draw[very thick,black] (5,2) -- (5,3);
+%                    \draw[very thick,black] (5,3) -- (5,4);
+%                    \draw[very thick,black] (5,4) -- (5,5);
+%                    \draw[very thick,black] (5,5) -- (4,5);
+%                    \draw[very thick,black] (4,5) -- (3,5);
+%                    \draw[very thick,black] (3,5) -- (2,5);
+%                    \draw[very thick,black] (2,5) -- (2,4);
+%                    \draw[very thick,black] (2,4) -- (2,3);
+%                    \draw[very thick,black] (2,3) -- (2,2);
+%                    \draw[very thick,black] (2,2) -- (3,2);
+%
+%                    %crosses
+%                    %\onslide<2>{\draw (2,2) -- (3,1) -- (4,2) -- (5,1);}
+%                    %\onslide<2>{\draw (2,1) -- (3,2) -- (4,1) -- (5,2);}
+%
+%                    %\onslide<2>{\draw (5,2) -- (6,3) -- (5,4) -- (6,5);}
+%                    %\onslide<2>{\draw (6,2) -- (5,3) -- (6,4) -- (5,5);}
+%                    %
+%                    %\onslide<2>{\draw (2,6) -- (3,5) -- (4,6) -- (5,5);}
+%                    %\onslide<2>{\draw (2,5) -- (3,6) -- (4,5) -- (5,6);}
+%
+%                    %\onslide<2>{\draw (1,2) -- (2,3) -- (1,4) -- (2,5);}
+%                    %\onslide<2>{\draw (2,2) -- (1,3) -- (2,4) -- (1,5);}
+%
+%                \end{tikzpicture}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmo a cluster II}
+%    \begin{columns}[T]
+%    \centering
+%        \begin{column}{0.59\textwidth}
+%            \begin{itemize}
+%                \item
+%                    Coniugando $U$ e tutti i link interni, solo la plaquette esterna $\mathcal P$ viene modificata $\Rightarrow$ accettanza non bassa: $10\%-30\%$.
+%                \item
+%                    L'algoritmo è stato ulteriormente ottimizzato con un'opportuna scelta gaussiana di $U$,
+%                    ottenendo un'accettanza del $20\%-40\%$.
+%                \item
+%                    L'accettanza è indipendente dalla grandezza del cluster, che può essere scelta opportunamente visualizzando la carica.
+%            \end{itemize}
+%        \end{column}
+%        \begin{column}{0.39\textwidth}
+%        \begin{tikzpicture}[x=0.75cm,y=0.75cm]
+%            \draw[step=1, help lines, dashed, color=black!30] (0,0) grid (4.5,4.5);
+%            \draw[->,thick,black] (0,0) -- (4.5,0) node [right] {$x_1$};
+%            \draw[->,thick,black] (0,0) -- (0,4.5) node [above] {$x_2$};
+%
+%            %gate
+%            \draw[->-,very thick,black,dashed] (2,1) -- node [black,above] {$U$} (3,1);
+%
+%            %path
+%            \draw[->-,very thick,RoyalBlue] (3,1) -- node [black,below] {$U_1$} (4,1);
+%            \draw[->-,very thick,RoyalBlue] (4,1) -- node [black,right] {$U_2$} (4,2);
+%            \draw[->-,very thick,RoyalBlue] (4,2) -- node [black,right] {$U_3$} (4,3);
+%            \draw[->-,very thick,RoyalBlue] (4,3) -- node [black,right] {$U_4$} (4,4);
+%            \draw[->-,very thick,RoyalBlue] (4,4) -- node [black,above] {$U_5$} (3,4);
+%            \draw[->-,very thick,RoyalBlue] (3,4) -- node [black,above] {$U_6$} (2,4);
+%            \draw[->-,very thick,RoyalBlue] (2,4) -- node [black,above] {$U_7$} (1,4);
+%            \draw[->-,very thick,RoyalBlue] (1,4) -- node [black,left] {$U_8$} (1,3);
+%            \draw[->-,very thick,RoyalBlue] (1,3) -- node [black,left] {$U_9$} (1,2);
+%            \draw[->-,very thick,RoyalBlue] (1,2) -- node [black,left] {$U_{10}$} (1,1);
+%            \draw[->-,very thick,RoyalBlue] (1,1) -- node [black,below] {$U_{11}$} (2,1);
+%
+%            %plaquette
+%            \draw[->-,very thick,Maroon] (2,0) -- (2,1);
+%            \draw[->-,very thick,Maroon] (3,0) -- (2,0);
+%            \draw[->-,very thick,Maroon] (3,1) -- (3,0);
+%            \node at (2.5,0.5) {$\mathcal P$};
+%
+%            %\draw[->-,very thick,dashed] (2,1) -- (3,1);
+%        \end{tikzpicture}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Limite al continuo dell'accettanza dell'algoritmo a cluster: Inversione vs Gauss}
+%    \centering
+%    \import{gfx/}{cluster_acc_cont.pgf}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Accettanza al variare della dimensione del cluster: Inversione vs Gauss}
+%    \centering
+%    \import{gfx/}{cluster_acc_side.pgf}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmo a cluster: visualizzazione}
+%    \begin{columns}[T]
+%        \centering
+%        \begin{column}{0.39\textwidth}
+%            \begin{itemize}
+%                \item
+%                    L'algoritmo a cluster è applicato alla regione evidenziata.
+%                \item
+%                    La proposta è stata accettata e il cluster è stato invertito.
+%                \item
+%                    La colormap della carica mostra l'inversione di segno della carica all'interno della regione.
+%                \item
+%                    Anche il piccolo avvolgimento interno ha cambiato segno.
+%            \end{itemize}
+%        \end{column}
+%        \begin{column}{0.59\textwidth}
+%            \begin{overprint}
+%                \onslide<1>\centerline{\import{gfx/}{cluster_inv1.pgf}}
+%                \onslide<2>\centerline{\import{gfx/}{cluster_inv2.pgf}}
+%            \end{overprint}
+%        \end{column}
+%    \end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Storia della carica topologica: locale vs cluster}
+%    \centering
+%    \import{gfx/}{cluster_charge_history.pgf}
+%\end{frame}
+%
+%
+%\begin{frame}
+%    \frametitle{Algoritmo a cluster: simulazioni e verifica della correttezza}
+%    \begin{itemize}
+%        \item
+%            Sono state effettuate simulazioni con l'algoritmo a cluster sulla stessa linea di volume fisico costante $\beta/N^2=1/80$ e
+%            con lo stesso numero di iterazioni usate per l'algoritmo locale.
+%        \item
+%            In questo caso le iterazioni sono un'alternanza di aggiornamenti locali e di inversioni di cluster.
+%        \item
+%            Per verificare la correttezza dell'algoritmo, è stato nuovamente confrontato il valore di $E[\mathcal P]$ con $\beta=7.2$ e $N=24$:
+%            \begin{equation*}\begin{aligned}
+%                E[\mathcal P] &= 0.52040(39) \quad \text{(D\"urr-Hoelbling)} \\
+%                E[\mathcal P] &= \input{tables/plaq_local.tex} \quad \text{(Algoritmo locale)} \\
+%                E[\mathcal P] &= \input{tables/plaq_cluster.tex} \quad \text{(Algoritmo a cluster)}
+%            \end{aligned}\end{equation*}
+%    \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmo a cluster: limite al continuo dell'energia di plaquette media}
+%    \centering
+%    \import{gfx/}{cluster_energy_cont.pgf}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmo a cluster: limite al continuo della suscettività topologica I}
+%    \centering
+%    \import{gfx/}{cluster_susc_cont.pgf}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmo a cluster: limite al continuo della suscettività topologica II}
+%    \begin{itemize}
+%        \item
+%            Risultati dei fit:
+%            \input{tables/cluster_susc_cont.tex}
+%        \item
+%            L'andamento verso il limite al continuo cambia per reticoli sufficientemente fini,
+%            quando è più marcata la struttura a cluster.
+%        \item
+%            Questo cambio di regime non è apprezzabile con misure più imprecise.
+%        \item
+%            Non è stato osservato un effetto sistematico includendo o escludendo dal fit il punto a $\beta=5$.
+%    \end{itemize}
+%\end{frame}
+%
+%\section{Conclusioni e prospettive}
+%
+%\begin{frame}
+%    \frametitle{Conclusioni}
+%    \begin{itemize}
+%        \item
+%            È stato definito un originale algoritmo M-H locale per le teorie $U(1)$,
+%            che sfrutta il metodo di Laplace per ottenere accettanze molto alte vicino al limite continuo.
+%        \item
+%            È stato introdotto un originale metodo di smoothing della carica basato sul blur Gaussiano noto in image processing.
+%            Questo metodo si è rivelato utile per studiare le configurazioni topologiche del sistema.
+%        \item
+%            È stato definito un originale algoritmo M-H a cluster che facilita il tunneling della carica contrastando efficacemente il freezing topologico.
+%            L'algoritmo è stato ulteriormente ottimizzato con una scelta Gaussiana in modo analogo al M-H locale.
+%        \item
+%            È stata effettuata un'estrapolazione della suscettività topologica ad alta precisione:
+%            distinguendo due diversi regimi è stato possibile  migliorare l'estrapolazione di D\"urr e Hoelbling.
+%    \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Prospettive future}
+%    \begin{itemize}
+%        \item
+%            I risultati esatti forniti da questo algoritmo possono essere usati per valutare le comuni tecniche applicate in QCD per contrastare il freezing topologico.
+%        \item
+%            È possibile introdurre dei fermioni in questo sistema e valutare le performance dell'algoritmo a cluster in loro presenza.
+%            Sono particolarmente interessanti perché confinati in modo simile a quanto avviene in QCD.
+%        \item
+%            Visti gli ottimi risultati ottenuti in questo modello,
+%            sono in corso dei tentativi di estensione dell'algoritmo a cluster a modelli più complessi, come il $\mathbb CP^{N-1}$ e la QCD.
+%    \end{itemize}
+%\end{frame}
+%
+%\hoffset=-0.5\leftsidebar
+%\begin{frame}[plain,t]
+%\titlepage
+%\end{frame}
+%\hoffset=0in % restore left margin
+%
+%\section{Appendice}
+%
+%\begin{frame}
+%    \frametitle{Metodo di Laplace}
+%    \centering
+%    \import{gfx/}{gauss.pgf}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Gaussiana troncata}
+%    \begin{equation*}\begin{gathered}
+%        x = \sqrt{-\frac{2}{k}\log\left[1-y_1\left(1-e^{-\frac{k}{2}\pi^2}\right)\right]}\cos\left[2\pi\left(y_2-\frac{1}{2}\right)\right] \\[1em]
+%        \text{con:}\ 
+%        \begin{dcases}
+%             y_1 \in [0,1] \\
+%             y_2 \in (0,1)
+%        \end{dcases}
+%    \end{gathered}\end{equation*}
+%    \[
+%        p(x) \propto e^{-kx^2/2} \qquad x\in (-\pi,\pi]
+%    \]
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Algoritmo locale: storia dell'energia di plaquette media}
+%    \centering
+%    \import{gfx/}{local_energy_history.pgf}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Limite al continuo della suscettività topologica con BIAS}
+%    \centering
+%    \import{gfx/}{local_susc_cont.pgf}
+%\end{frame}
+%
+%\begin{frame}
+%    \frametitle{Blur Gaussiano}
+%	\begin{overprint}
+%		\onslide<1>\centerline{\import{gfx/}{cappadocia1.pgf}}
+%		\onslide<2>\centerline{\import{gfx/}{cappadocia2.pgf}}
+%		\onslide<3>\centerline{\import{gfx/}{cappadocia3.pgf}}
+%		\onslide<4>\centerline{\import{gfx/}{cappadocia4.pgf}}
+%	\end{overprint}
+%\end{frame}
+%
+%
+%\begin{frame}
+%    \frametitle{Algoritmo a cluster: tempo di autocorrelazione della carica topologica}
+%    \centering
+%    \import{gfx/}{cluster_charge_corr.pgf}
+%\end{frame}
+
+\end{document}

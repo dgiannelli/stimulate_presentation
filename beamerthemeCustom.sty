@@ -1,0 +1,225 @@
+%\usetheme{Berkeley}
+
+\RequirePackage{pgf}
+\RequirePackage{microtype}
+\microtypesetup{protrusion=true,expansion=true}
+
+\useoutertheme{sidebar}
+%\useinnertheme[shadow=true]{rounded} %\useinnertheme{rounded}
+\useinnertheme{default}
+\setbeamertemplate{section in toc}[sections numbered]
+
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamertemplate{navigation symbols}{}
+%\setbeamercovered{transparent}
+
+\newdimen\beamer@headheight
+\beamer@headheight=0.10\paperwidth
+%\beamer@sidebarwidth=\beamer@headheight
+
+%\definecolor{oxygenorange}{rgb}{0.96,0.5,0.04}
+%\definecolor{oxygengray}{rgb}{0.41,0.41,0.41}
+%\definecolor{oxygenlightgray}{rgb}{0.93,0.93,0.93}
+%\definecolor{oxygenblue}{rgb}{0.14,0.43,0.70}
+
+%\definecolor{setred}{cmyk}{10,90,80,0}
+%\definecolor{setred}{HTML}{e41a1c}
+%\definecolor{setblue}{HTML}{377eb8}
+%\definecolor{setgreen}{HTML}{4daf4a}
+%\definecolor{setorange}{HTML}{ff7f00}
+
+\setbeamercolor*{structure}{fg=RoyalBlue,bg=white}
+
+\setbeamercolor*{title}{fg=Maroon, bg=white}
+
+\setbeamercolor*{normal text}{bg=white,fg=black}
+\setbeamercolor*{section in head/foot}{bg=RoyalBlue,fg=white}
+\setbeamerfont{section in head/foot}{size=\scriptsize}%,series=\normalfont}
+
+\setbeamercolor*{Title bar}{fg=RoyalBlue, bg=RoyalBlue}
+\setbeamercolor*{frametitle}{fg=RoyalBlue, bg=white}
+\setbeamerfont{frametitle}{size=\large}
+\setbeamercolor{Location bar}{fg=RoyalBlue,bg=lightgray!40}
+
+\setbeamercolor*{block title}{fg=white,bg=RoyalBlue}
+\setbeamercolor*{block body}{fg=black,bg=lightgray!40}
+\setbeamercolor*{block title alerted}{bg=red,fg=white}
+
+\setbeamercolor*{sidebar}{fg=RoyalBlue,bg=RoyalBlue}
+%\setbeamercolor*{palette sidebar primary}{use=structure,fg=structure.fg!10}
+\setbeamercolor*{section in sidebar}{fg=white}
+\setbeamercolor*{section in sidebar shaded}{use=structure, fg=structure.fg!50}
+
+\pgfdeclareimage[height=0.7\beamer@headheight]{cherubino}{gfx/cherubino_stimulate.png}
+\pgfdeclareimage[height=0.75\beamer@headheight]{logo}{gfx/logo_stimulate.png}
+\pgfdeclareimage[height=0.75\beamer@headheight]{logo_humboldt}{gfx/logosign_humboldt}
+
+%\newcommand\supervisor[1]{\renewcommand\insertsupervisor{#1}}
+%\newcommand\insertsupervisor{\@latex@error{No \noexpand\supervisor given}\@ehc}
+
+
+%\DeclareOptionBeamer{hideothersubsections}{\PassOptionsToPackage{hideothersubsections=#1}{beamerouterthemesidebar}}
+%\DeclareOptionBeamer{hideallsubsections}{\PassOptionsToPackage{hideallsubsections=#1}{beamerouterthemesidebar}}
+%\ProcessOptionsBeamer
+
+
+%\newdimen\beamer@mydim
+%\beamer@mydim=\paperwidth%
+%\advance\beamer@mydim by-\beamer@sidebarwidth%
+%%\advance\beamer@mydim by-2pt% %% TODO: Adjust the size better!
+
+
+
+\defbeamertemplate*{frametitle}{custom}
+{%
+  %\nointerlineskip%
+  \vskip-\beamer@headheight%
+  \vbox to \beamer@headheight{%
+    \leftskip=-\beamer@leftmargin%
+    \advance\leftskip by0.3cm%
+    \rightskip=-\beamer@rightmargin%
+    \advance\rightskip by0.3cm plus1fil%
+
+%     \ifbeamer@subsectionattop
+%     \begin{beamercolorbox}[ignorebg,wd=\textwidth,ht=2.25ex,dp=3.75ex]{subsection in head/foot}
+%       \usebeamercolor{subsection in head/foot}
+%       \usebeamerfont{subsection in head/foot}
+%       \insertsubsectionnavigationhorizontal{\beamer@mydim}{\hskip\beamer@sidebarwidth}{}%}{}
+%       %\insertsubsectionhead
+%     \end{beamercolorbox}%
+%     \fi
+
+    \vfil
+    {\usebeamercolor[fg]{frametitle}\usebeamerfont{frametitle}\insertframetitle\par}%
+    {\usebeamercolor[fg]{framesubtitle}\usebeamerfont{framesubtitle}\insertframesubtitle\par}%
+    \vbox{}%
+    \vskip-1.5em%
+    \vfil%
+    %% Adding the bar only if there is a title
+    \ifx\insertframetitle\@empty%
+    \else%
+    {\hrule width 0.6\paperwidth}%
+    \fi%
+  }%
+}%
+
+
+\defbeamertemplate*{headline}{custom}
+{%
+    \begin{beamercolorbox}[wd=\beamer@sidebarwidth,dp=1pt]{Title bar}
+  %  %%\usebeamercolor[bg]{logo}%
+  %  %\usebeamercolor[bg]{frametitle}%
+  %  \vrule width\beamer@sidebarwidth height \beamer@headheight%
+  %  %\hskip-\beamer@sidebarwidth%
+    \hbox to \beamer@sidebarwidth{\hss\vbox to
+      \beamer@headheight{\vss\hbox{\color{fg}
+      \pgfuseimage{cherubino}
+    }\vss}\hss}%
+  \end{beamercolorbox}
+}
+
+%% Sidebar
+\defbeamertemplate*{sidebar left}{custom}
+{
+  %\hrule width 1.5\beamer@sidebarwidth
+  \vskip4em%
+  \insertverticalnavigation{\beamer@sidebarwidth}%
+  \vfill%
+}%
+
+
+\defbeamertemplate*{footline}{custom}
+{
+  \linethickness{0.1pt}
+  \framelatex{
+  \begin{beamercolorbox}[leftskip=15pt,rightskip=15pt,wd=\paperwidth,ht=3.65ex,dp=1.5ex]{Location bar}
+    \usebeamerfont{section in head/foot}%
+    \insertdate
+    \hfill
+    \insertshortauthor~-~\insertshorttitle
+    \hfill
+    Slide \insertframenumber%/\inserttotalframenumber
+  \end{beamercolorbox}}
+}
+
+\defbeamertemplate*{title page}{custom}
+{
+    \centering
+    \vskip-6pt%
+    \hskip-\beamer@sidebarwidth%
+    \begin{beamercolorbox}[wd=\paperwidth]{Title bar}
+        \centering
+        \vskip+10pt%
+        \pgfuseimage{logo}%
+        \vskip+10pt
+
+    \end{beamercolorbox}
+
+    \vspace{15pt}
+
+    {\usebeamercolor[fg]{title}\textls[90]{\MakeUppercase\inserttitle}}
+
+    \vspace{15pt}
+
+    \textls[70]{\scriptsize SUPERVISORS}\\\vspace{2pt}
+    \begin{columns}
+        \centering
+        \begin{column}{.20\textwidth}
+        \end{column}
+        \begin{column}{.20\textwidth}
+            \centering
+            Karl Jansen
+        \end{column}
+        \begin{column}{.20\textwidth}
+            \centering
+            Caren Tischendorf
+        \end{column}
+        \begin{column}{.20\textwidth}
+            \centering
+            Igor Sokolov
+        \end{column}
+        \begin{column}{.20\textwidth}
+        \end{column}
+    \end{columns}
+
+    \vspace{15pt}
+
+    \textls[70]{\scriptsize FELLOW}\\\vspace{2pt}
+    \insertauthor
+
+%    \vspace{15pt}
+
+%    \pgfuseimage{logo_humboldt}
+
+    \vspace{20pt}
+
+    Fellow presentation\\\vspace{10pt}
+    \insertdate
+
+}
+
+\beamer@tocsectionnumber=0
+
+\AtBeginSection[]{
+    %\hoffset=-0.5\beamer@leftsidebar
+  \begin{frame}[t]
+      %\centering
+      %\vskip-6pt%
+      %\hskip-\beamer@sidebarwidth%
+      %\begin{beamercolorbox}[wd=\paperwidth]{Title bar}
+      %    \centering
+      %    \vskip+10pt%
+      %    \pgfuseimage{logo}%
+      %    \vskip+10pt
+
+      %\end{beamercolorbox}
+
+      \vspace{50pt}
+      \centering
+
+%      Sezione \thesection:\\\vspace{1em}
+      {\usebeamercolor[fg]{title}\textls[90]{\MakeUppercase{\expandafter\protect\insertsectionhead}}}
+
+  \end{frame}
+%\hoffset=0pt
+}
