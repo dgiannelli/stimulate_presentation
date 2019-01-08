@@ -1,0 +1,195 @@
+\documentclass[10pt,t,xcolor=dvipsnames,aspectratio=169]{beamer}
+
+\usetheme{Custom}
+
+\usepackage{sansmathfonts}
+
+%\usepackage[italian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{mathtools}
+
+\usepackage{tikz}
+\usetikzlibrary{decorations,decorations.markings}
+\usetikzlibrary{decorations.shapes}
+\usepackage{import} % inputs with relative path
+\let\pgfimageWithoutPath\pgfimage 
+\renewcommand{\pgfimage}[2][]{\pgfimageWithoutPath[#1]{gfx/#2}}
+
+
+\title[Fellow project presentation]{Hybrid quantum-classical simulations in lattice gauge theories}
+\author{Giovanni Iannelli}
+%\supervisor{}
+\institute{Humboldt University of Berlin}
+\date{15 January 2019}
+
+\newlength\leftsidebar
+\makeatletter
+\setlength\leftsidebar{\beamer@leftsidebar}
+\makeatother
+
+\begin{document}
+
+\hoffset=-0.5\leftsidebar
+\begin{frame}[plain,t]
+\titlepage
+\end{frame}
+\hoffset=0in % restore left margin
+
+%\section*{}
+%\begin{frame}[c]
+%  \frametitle{Sommario}
+%  \tableofcontents[hidesubsections]
+%\end{frame}
+
+\section{Introduction}
+
+\tikzset{->-/.style={decoration={markings,mark=at position .55 with {\arrow{to}}},postaction={decorate}}} 
+\tikzset{
+    partial ellipse/.style args={#1:#2:#3}{
+        insert path={+ (#1:#3) arc (#1:#2:#3)}
+    }
+}
+
+\begin{frame}
+    \frametitle{Quantum Computer and Quantum Simulation}
+    \begin{itemize}
+        \item
+            Quantum computers memory is made by $n$ connected qubits.
+        \item
+            A basis of one qubit state space is $\{|0>,|1>\}$.
+        \item
+            The dimension of the $n$ qubits state space is $2^n$.
+        \item
+            The QPU (Quantum Processing Unit):
+            \begin{itemize}
+                \item Applies unitary transformations on the qubits.
+                \item Measures the qubits values.
+            \end{itemize}
+        \item
+            Quantum simulation:
+            \begin{itemize}
+                \item
+                    Mapping a physical system into a qubits system.
+                \item
+                    Creating a qubits state and measuring observables with a quantum computer.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\section{Objective}
+
+\begin{frame}
+    \frametitle{Looking for the ground state}
+    \begin{itemize}
+        \item
+            We are developing a hybrid variational method for finding the ground state:
+            \begin{itemize}
+                \item Selects a qubits quantum state.
+                \item Measures the energy with a quantum computer.
+                \item Iterates on a new quantum state until the minimum energy is found.
+            \end{itemize}
+        \item
+            Difficulties:
+            \begin{itemize}
+                \item Quantum measures are probabilistic.
+                \item Quantum decoherence.
+                \item Many parameters.
+            \end{itemize}
+        \item
+            We need a stochastic, robust and scalable algorithm that can deal with noise:
+            \begin{itemize}
+                \item It has to work with random energy values $\Rightarrow$ error afflicted.
+                \item It has to deal with impurities of quantum states.
+                \item It has to work with many qubits states of future quantum architectures.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\section{Aim}
+
+\begin{frame}
+    \frametitle{Application to lattice gauge theories}
+    \begin{itemize}
+        \item
+            We will start with 1+1 dimensional models that are of interest in condensed matter and high energy physics:
+            \begin{itemize}
+                \item Heisenberg model.
+                \item Schwinger model.
+                \item $\mathbb CP^{N-1}$ model.
+                \item Gross-Neveu model.
+            \end{itemize}
+        \item
+            We will add a $\theta$ term.
+        \item
+            In presence of a $\theta$ term, MC simulations suffer from the sign problem, while quantum simulators don't.
+        \item
+            With Quantum Computers it may be possible to have results not obtainable with classic computers.
+        \item
+            We plan to apply the same idea to 2+1 dimensional gauge theories, abelian and non-abelian, and coupled to matter.
+    \end{itemize}
+\end{frame}
+
+%\section{Methodology}
+%\begin{frame}
+%    \begin{itemize}
+%        \item
+%            We are working with 
+%    \end{itemize}
+%\end{frame}
+
+\section{Expected results and impact}
+
+\begin{frame}
+    \frametitle{Quantum advantage}
+    \begin{itemize}
+        \item
+            There is a Quantum advantage if a quantum computer can solve a problem that a classical computer cannot.
+        \item
+            Not achieved yet. IBM Q and Rigetti (among others) are working on it for years.
+        \item
+            Quantum physics problems are more likely to have greater advantages from quantum computers:
+            \begin{itemize}
+                \item Quantum systems are easier to map to qubits states. They share QM rules.
+                \item Integrating path integrals is very resource demanding.
+            \end{itemize}
+        \item
+            System with the sign problem could show quantum advantage:
+            \begin{itemize}
+                \item Path integrals evaluation becomes very complicated.
+                \item In some cases impossible.
+                \item Even an imprecise result with a quantum computer could show quantum advantage.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\hoffset=-0.5\leftsidebar
+\begin{frame}[plain,t]
+\titlepage
+\end{frame}
+\hoffset=0in % restore left margin
+
+\begin{frame}
+    \frametitle{The sign problem in computational physics}
+    \begin{itemize}
+        \item
+            The sign problem arises when evaluating highly oscillatory path integrals.
+        \item
+            It's one of the main problems in computational physics.
+            It affects MC simulations of:
+            \begin{itemize}
+                \item Many electrons systems at low temperatures.
+                \item Nuclei and neutron stars.
+                \item Quark matter and vacuum in QCD.
+            \end{itemize}
+        \item
+            Quantum simulators don't suffer from it.
+            They don't need numerical integration of path integrals.
+            Measures are performed directly on quantum states.
+        \item
+            Quantum computers may provide a complementary numerical method in these fields.
+    \end{itemize}
+\end{frame}
+
+\end{document}

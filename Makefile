@@ -12,7 +12,7 @@ tables/%.tex: scripts/%.py
 
 #pdf: $(plots) $(tables)
 pdf:
-	latexmk presentation -pdf
+	latexmk stimulate_slides -pdf
 
 clean:
 	latexmk -c
