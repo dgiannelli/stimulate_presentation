@@ -18,9 +18,9 @@
 \renewcommand{\pgfimage}[2][]{\pgfimageWithoutPath[#1]{gfx/#2}}
 
 
-\title[Fellow project]{Hybrid quantum-classical simulations in lattice gauge theories}
+\title[Fellow project presentation]{Hybrid quantum-classical simulations in lattice gauge theories}
 \author{Giovanni Iannelli}
-%\supervisor{Prof. Massimo D'Elia}
+%\supervisor{}
 \institute{Humboldt University of Berlin}
 \date{15 January 2019}
 
@@ -43,7 +43,7 @@
 %  \tableofcontents[hidesubsections]
 %\end{frame}
 
-%\section{Introduzione}
+\section{Introduction}
 
 \tikzset{->-/.style={decoration={markings,mark=at position .55 with {\arrow{to}}},postaction={decorate}}} 
 \tikzset{
@@ -53,10 +53,14 @@
 }
 
 \begin{frame}
-    \frametitle{Quantum computer and quantum simulation}
+    \frametitle{Quantum Computer and Quantum Simulation}
     \begin{itemize}
         \item
-            The QC memory is made by connected qubits (basis: $\{|0>,|1>\}$)
+            The QC memory is made by $n$ connected qubits.
+        \item
+            A basis of one qbit state space is $\{|0>,|1>\}$
+        \item
+            The dimension of the $n$ qbits state space is $2^n$
         \item
             The QPU:
             \begin{itemize}
@@ -69,16 +73,18 @@
                 \item
                     Mapping a physical system into a qbits system
                 \item
-                    Measuring observables with a quantum computer
+                    Creating a qubits state and measuring observables with a quantum computer
             \end{itemize}
     \end{itemize}
 \end{frame}
+
+\section{Objective}
 
 \begin{frame}
     \frametitle{Looking for the ground state}
     \begin{itemize}
         \item
-            We are developing a hybrid variational method:
+            We are developing a hybrid variational method for finding the ground state:
             \begin{itemize}
                 \item Selects a qubit quantum state
                 \item Measures the energy with a quantum computer
@@ -89,31 +95,57 @@
             \begin{itemize}
                 \item Quantum measures are probabilistic
                 \item Quantum decoherence
+                \item Many parameters
             \end{itemize}
         \item
-            We need a robust and scalable algorithm
+            We need a stochastic, robust and scalable algorithm:
+            \begin{itemize}
+                \item It has to work with random energy values
+                \item It has to deal with impurities of quantum states
+                \item It has to work with many qubits states of future quantum architectures
+            \end{itemize}
     \end{itemize}
 \end{frame}
+
+\section{Aim}
 
 \begin{frame}
     \frametitle{Application to lattice gauge theories}
     \begin{itemize}
         \item
-            We will apply this method to the Schwinger model (QED in $1+1$ dimensions)
+            We will apply this method to the quanched Schwinger model
         \item
-            In presence of a chemical potential or a $\theta$ term, the action is complex: sign problem in MC
+            The Schwinger model is QED in $1+1$ dimensions. It is the simplest continuous gauge theory.
+        \item
+            In presence of a chemical potential or a $\theta$ term, the action is complex: sign problem in MC simulations
         \item
             Quantum simulators don't suffer from the sign problem
         \item
-            We plan to apply the same idea in higher dimensions
+            With Quantum Computers it may be possible to have results not obtainable with classic computers
+        \item
+            We plan to apply the same idea to
+            \begin{itemize}
+                \item more complex models, i.e. the $\mathbb CP^{N-1}$ model
+                \item Systems in more dimensions, i.e. QED and QCD
+            \end{itemize}
     \end{itemize}
 \end{frame}
 
+%\section{Methodology}
+%\begin{frame}
+%    \begin{itemize}
+%        \item
+%            We are working with 
+%    \end{itemize}
+%\end{frame}
+
+\section{Expected results and impact}
+
 \begin{frame}
-    \frametitle{The sign problem}
+    \frametitle{The sign problem in computational physics}
     \begin{itemize}
         \item
-            The sign problem arises when integrating highly oscillatory functions
+            The sign problem arises when evaluating highly oscillatory path integrals
         \item
             It's one of the main problems in computational physics.
             It affects MC simulations of:
@@ -125,7 +157,9 @@
         \item
             Quantum simulators don't suffer from it.
             They don't need numerical integration of path integrals.
-            Measures are performed directly
+            Measures are performed directly on quantum states
+        \item
+            Quantum computers may provide a complementary numerical method in these fields
     \end{itemize}
 \end{frame}
 
@@ -135,11 +169,20 @@
         \item
             Using a quantum computer to solve a problem that a classical computer cannot
         \item
-            Not achieved yet. Google and NASA (among others) are working on it for years.
+            Not achieved yet. Google and NASA (among others) are working on it for years
         \item
-            Quantum physics problems are more likely to have greater advanteges from quantum computers
+            Quantum physics problems are more likely to have greater advantages from quantum computers:
+            \begin{itemize}
+                \item Quantum systems are easier to map to qbits states. They share QM rules
+                \item Integrating path integrals is very resource demanding
+            \end{itemize}
         \item
-            System with fermion sign problem could show quantum advantage
+            System with the sign problem could show quantum advantage:
+            \begin{itemize}
+                \item Path integrals evaluation becomes very complicated
+                \item In some cases impossible
+                \item Even an imprecise result with a quantum computer could show quantum advantage
+            \end{itemize}
     \end{itemize}
 \end{frame}
 
