@@ -52,7 +52,8 @@
 
 \pgfdeclareimage[height=0.7\beamer@headheight]{cherubino}{gfx/cherubino_stimulate.png}
 \pgfdeclareimage[height=0.75\beamer@headheight]{logo}{gfx/logo_stimulate.png}
-\pgfdeclareimage[height=0.75\beamer@headheight]{logo_humboldt}{gfx/logosign_humboldt}
+\pgfdeclareimage[height=0.9\beamer@headheight]{logo_humboldt}{gfx/logo_humboldt.pdf}
+\pgfdeclareimage[height=.5\paperheight]{humboldt}{gfx/logo_humboldt.png}
 
 %\newcommand\supervisor[1]{\renewcommand\insertsupervisor{#1}}
 %\newcommand\insertsupervisor{\@latex@error{No \noexpand\supervisor given}\@ehc}
@@ -106,6 +107,7 @@
 
 \defbeamertemplate*{headline}{custom}
 {%
+    \hbox to \paperwidth{%
     \begin{beamercolorbox}[wd=\beamer@sidebarwidth,dp=1pt]{Title bar}
   %  %%\usebeamercolor[bg]{logo}%
   %  %\usebeamercolor[bg]{frametitle}%
@@ -115,7 +117,15 @@
       \beamer@headheight{\vss\hbox{\color{fg}
       \pgfuseimage{cherubino}
     }\vss}\hss}%
-  \end{beamercolorbox}
+  \end{beamercolorbox}%
+  \hfill%
+  %\begin{beamercolorbox}[wd=\beamer@sidebarwidth,dp=1pt]{Title bar}
+    \hbox to \beamer@sidebarwidth{\hss\vbox to
+      \beamer@headheight{\vss\hbox{
+      \pgfuseimage{logo_humboldt}
+    }\vss}\hss}%
+  %\end{beamercolorbox}
+  }
 }
 
 %% Sidebar

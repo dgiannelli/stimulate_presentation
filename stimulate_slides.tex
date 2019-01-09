@@ -32,9 +32,16 @@
 \begin{document}
 
 \hoffset=-0.5\leftsidebar
+{
+    \usebackgroundtemplate{
+        \put(320,-230){%
+        \tikz\node[opacity=0.2] {\pgfuseimage{humboldt}};
+        }
+    }
 \begin{frame}[plain,t]
 \titlepage
 \end{frame}
+}
 \hoffset=0in % restore left margin
 
 %\section*{}
@@ -81,10 +88,10 @@
 \section{Objective}
 
 \begin{frame}
-    \frametitle{Looking for the ground state}
+    \frametitle{Looking for the ground state of a qubits system}
     \begin{itemize}
         \item
-            We are developing a hybrid variational method for finding the ground state:
+            We are developing a hybrid variational method for finding the ground state with a given Hamiltonian:
             \begin{itemize}
                 \item Selects a qubits quantum state.
                 \item Measures the energy with a quantum computer.
@@ -121,9 +128,7 @@
                 \item Gross-Neveu model.
             \end{itemize}
         \item
-            We will add a $\theta$ term to the gauge theories.
-        \item
-            In presence of a $\theta$ term, MC simulations suffer from the sign problem, while quantum simulators don't.
+            In presence of a $\theta$ term, MC simulations of gauge theories suffer from the sign problem, while quantum simulators don't.
         \item
             With Quantum Computers it may be possible to have results not obtainable with classic computers.
         \item
@@ -149,25 +154,32 @@
         \item
             Not achieved yet. IBM Q and Rigetti (among others) are working on it for years.
         \item
-            Quantum physics problems are more likely to have greater advantages from quantum computers:
+            We expect that quantum physics problems will have greater advantages from quantum computers:
             \begin{itemize}
                 \item Quantum systems are easier to map to qubits states. They share QM rules.
                 \item Integrating path integrals is very resource demanding.
             \end{itemize}
         \item
-            System with the sign problem could show quantum advantage:
+            System with the sign problem could show quantum advantages:
             \begin{itemize}
                 \item Path integrals evaluation becomes very complicated.
                 \item In some cases impossible.
-                \item Even an imprecise result with a quantum computer could show quantum advantage.
+                \item Even an imprecise result with a quantum computer could show a quantum advantage.
             \end{itemize}
     \end{itemize}
 \end{frame}
 
 \hoffset=-0.5\leftsidebar
+{
+    \usebackgroundtemplate{
+        \put(320,-230){%
+        \tikz\node[opacity=0.2] {\pgfuseimage{humboldt}};
+        }
+    }
 \begin{frame}[plain,t]
 \titlepage
 \end{frame}
+}
 \hoffset=0in % restore left margin
 
 \section{Appendix}
